@@ -1,6 +1,7 @@
 import os
 import paho.mqtt.subscribe as subscribe
 from dotenv import load_dotenv
+import json
 
 load_dotenv()
 
@@ -13,5 +14,9 @@ m = subscribe.simple(topics=['#'],
                      auth={'username':username,'password':password}, msg_count=2)
 
 for a in m:
-    print(a.topic)
-    print(a.payload)
+    message = a.payload.decode("UTF-8")
+    payload = json.loads(message)
+
+    print('\n\n')
+    print(payload["end_device_ids"]["device_id"])
+    print(payload["uplink_message"]["decoded_payload"])
