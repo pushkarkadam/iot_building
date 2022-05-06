@@ -36,6 +36,19 @@ e. Install dependencies in the virtual environment::
 
     $ pip3 install -r requirements.txt
 
+TTN credentials
+---------------
+
+This repository does not contain any username or API keys.
+
+The username and API key is contained within the :code:`.env` file.
+
+Alternatively, use the following code::
+
+    $ export API_KEY=YOUR_API_KEY
+
+This will create environment variables only for that session.
+
 Installing MongoDB
 ------------------
 
