@@ -3,6 +3,7 @@ import paho.mqtt.subscribe as subscribe
 from dotenv import load_dotenv
 import json
 import time
+import signal
 import pymongo
 from pymongo import MongoClient
 
@@ -18,6 +19,13 @@ client = MongoClient()
 # Getting a database
 database_name = "iot_building"
 db = client[database_name]
+
+def handler(signum, frame):
+    res = input("Ctrl=c was pressed. Do you want to exit? (y/n): ")
+    if res.lower() == 'y':
+        exit(1)
+
+signal.signal(signal.SIGINT, handler)
 
 # Runs the programm unless interrupted
 while True:
@@ -40,14 +48,11 @@ while True:
     # Inserting the data in the collection
     all_uplinks.insert_one(payload)
 
-    print('\n\n')
-
     # Extracting time
     try:
         uplink_timestamp = payload["received_at"]
     except:
         uplink_timestamp = ""
-
 
     # Extracting device id information
     try:
@@ -71,3 +76,4 @@ while True:
 
     # Inserting the data to the collection
     sensor_data.insert_one(refined_payload)
+    print(f"{uplink_timestamp}:{device_id}")
