@@ -10,14 +10,20 @@ from pymongo import MongoClient
 load_dotenv()
 
 # TTN MQTT username and password
-username = os.environ.get("username")
-password = os.environ.get("password")
+mqtt_username = os.environ.get("mqtt_username")
+mqtt_password = os.environ.get("mqtt_password")
+
+# MongoDB username and password
+mongodb_username = os.environ.get("mongodb_username")
+mongodb_password = os.environ.get("mongodb_password")
+database_name = os.environ.get("database_name")
+collection_name = os.environ.get("collection_name")
 
 # Connecting to MongoDB
-client = MongoClient()
+connection = f"mongodb+srv://{mongodb_username}:{mongodb_password}@cluster0.bzwch.mongodb.net/{database_name}?retryWrites=true&w=majority"
+client = MongoClient(connection)
 
 # Getting a database
-database_name = "iot_building"
 db = client[database_name]
 
 def handler(signum, frame):
@@ -33,7 +39,7 @@ while True:
     m = subscribe.simple(topics=['#'],
                          hostname="au1.cloud.thethings.network",
                          port=1883,
-                         auth={'username':username,'password':password})
+                         auth={'username':mqtt_username,'password':mqtt_password})
 
     # Converts the binary to a string
     message = m.payload.decode("UTF-8")
@@ -42,11 +48,10 @@ while True:
     payload = json.loads(message)
 
     # Creating a collection to store the raw data from the uplinks on TTN
-    uplink_collection_name = "all_uplinks"
-    all_uplinks = db[uplink_collection_name]
+    uplinks = db[collection_name]
 
     # Inserting the data in the collection
-    all_uplinks.insert_one(payload)
+    uplinks.insert_one(payload)
 
     # Extracting time
     try:
@@ -60,20 +65,5 @@ while True:
     except:
         device_id = ""
 
-    # Extracting payload data
-    try:
-        sensor_data = payload["uplink_message"]["decoded_payload"]
-    except:
-        sensor_data = ""
-
-    refined_payload = {"timestamp": uplink_timestamp,
-                       "device_id": device_id,
-                       "sensor_data": sensor_data}
-
-    # Creating a collection in the database
-    sensor_collection_name = "sensor_data"
-    sensor_data = db[sensor_collection_name]
-
-    # Inserting the data to the collection
-    sensor_data.insert_one(refined_payload)
+    # Output timestamp and device id
     print(f"{uplink_timestamp}:{device_id}")
