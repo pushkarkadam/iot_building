@@ -1,4 +1,4 @@
 python-dotenv
 requests
 paho-mqtt
-pymongo
+pymongo[srv]
