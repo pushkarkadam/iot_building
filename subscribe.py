@@ -1,4 +1,5 @@
 import os
+import sys
 import paho.mqtt.subscribe as subscribe
 from dotenv import load_dotenv
 import json
@@ -19,15 +20,18 @@ mongodb_password = os.environ.get("mongodb_password")
 database_name = os.environ.get("database_name")
 collection_name = os.environ.get("collection_name")
 
-# Connecting to MongoDB
-connection = f"mongodb+srv://{mongodb_username}:{mongodb_password}@cluster0.bzwch.mongodb.net/{database_name}?retryWrites=true&w=majority"
-client = MongoClient(connection)
+try:
+    # Connecting to MongoDB
+    connection = f"mongodb+srv://{mongodb_username}:{mongodb_password}@cluster0.bzwch.mongodb.net/{database_name}?retryWrites=true&w=majority"
+    client = MongoClient(connection)
+except:
+    sys.exit("Could not connect to MongoDB. Check for valid credentials.")
 
 # Getting a database
 db = client[database_name]
 
 def handler(signum, frame):
-    res = input("Ctrl=c was pressed. Do you want to exit? (y/n): ")
+    res = input("\nCtrl+c was pressed. Do you want to exit? (y/n): ")
     if res.lower() == 'y':
         exit(1)
 
