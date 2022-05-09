@@ -37,6 +37,9 @@ d. For Windows::
     # Activate venv
     $ venv\Scripts\activate
 
+e. For Raspberry Pi::
+    $ Python3 -m virtualenv venv
+
 e. Install dependencies in the virtual environment::
 
     $ pip3 install -r requirements.txt
