@@ -120,20 +120,26 @@ Raspberry Pi installation instructions
 You may want to start the Raspberry Pi on console with auto-login.
 
 #. Downlad virtual environment::
+
     pip3 install virtualenv
 
 #. Clone the repository in the Documents folder on the RPi::
+
     cd Documents
     git clone https://github.com/pushkarkadam/iot_building.git
 
 #. Install the virtual inside the code directory's root environment::
+
     cd iot_building
     Python3 -m virtualenv venv
 
 #. Running the code in the start up
     Type to following to edit ``.bashrc`` file after opening nano text editor::
+
         sudo nano /home/pi/.bashrc
+
     Add the following lines::
+
         xhost +
         echo Running at boot
         sleep 1m
@@ -145,4 +151,5 @@ You may want to start the Raspberry Pi on console with auto-login.
     Exit Nano editor by pressing ``CTRL+X``.
 
 #. Reboot Raspberry Pi::
+
     sudo reboot
