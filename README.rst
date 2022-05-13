@@ -37,6 +37,9 @@ d. For Windows::
     # Activate venv
     $ venv\Scripts\activate
 
+e. For Raspberry Pi::
+    $ Python3 -m virtualenv venv
+
 e. Install dependencies in the virtual environment::
 
     $ pip3 install -r requirements.txt
@@ -109,3 +112,37 @@ In the terminal, run the following::
     $ python3 subscribe.py
 
 This script will populate the database. To quit the program type ``CTRL+C`` in the terminal.
+
+
+Raspberry Pi installation instructions
+--------------------------------------
+
+You may want to start the Raspberry Pi on console with auto-login.
+
+#. Downlad virtual environment::
+    pip3 install virtualenv
+
+#. Clone the repository in the Documents folder on the RPi::
+    cd Documents
+    git clone https://github.com/pushkarkadam/iot_building.git
+
+#. Install the virtual inside the code directory's root environment::
+    cd iot_building
+    Python3 -m virtualenv venv
+
+#. Running the code in the start up
+    Type to following to edit ``.bashrc`` file after opening nano text editor::
+        sudo nano /home/pi/.bashrc
+    Add the following lines::
+        xhost +
+        echo Running at boot
+        sleep 1m
+        git -C /home/pi/Documents/iot_building pull
+        source /home/pi/Documents/iot_building/venv/bin/activate
+        pip3 install -r '/home/pi/Documents/iot_building/requirements.txt'
+        python3 /home/pi/Documents/iot_building/subscribe.py
+
+    Exit Nano editor by pressing ``CTRL+X``.
+
+#. Reboot Raspberry Pi::
+    sudo reboot
